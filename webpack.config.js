@@ -7,14 +7,13 @@ const isDev = process.env.NODE_ENV === 'development'
 
 const config = {
   target: 'web',
-  entry: path.join(__dirname, 'src/index.js'),
+  entry: path.join(__dirname, 'client/index.js'),
   output: {
     filename: 'bundle.[hash:8].js',
     path: path.join(__dirname, 'dist')
   },
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.vue$/,
         loader: 'vue-loader'
       },
@@ -24,15 +23,13 @@ const config = {
       },
       {
         test: /\.(gif|jpg|jpeg|png|svg)$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 1024,
-              name: '[name]-aaa.[ext]'
-            }
+        use: [{
+          loader: 'url-loader',
+          options: {
+            limit: 1024,
+            name: '[name]-aaa.[ext]'
           }
-        ]
+        }]
       }
     ]
   },
@@ -76,28 +73,26 @@ if (isDev) {
   )
 } else {
   config.entry = {
-    app: path.join(__dirname, 'src/index.js'),
+    app: path.join(__dirname, 'client/index.js'),
     vendor: ['vue']
   }
   config.output.filename = '[name].[chunkhash:8].js'
-  config.module.rules.push(
-    {
-      test: /\.styl/,
-      use: ExtractPlugin.extract({
-        fallback: 'style-loader',
-        use: [
-          'css-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: true,
-            }
-          },
-          'stylus-loader'
-        ]
-      })
-    },
-  )
+  config.module.rules.push({
+    test: /\.styl/,
+    use: ExtractPlugin.extract({
+      fallback: 'style-loader',
+      use: [
+        'css-loader',
+        {
+          loader: 'postcss-loader',
+          options: {
+            sourceMap: true,
+          }
+        },
+        'stylus-loader'
+      ]
+    })
+  }, )
   config.plugins.push(
     new ExtractPlugin('styles.[contentHash:8].css'),
     new webpack.optimize.CommonsChunkPlugin({
